@@ -1,0 +1,89 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<h1 class="page-title">Your Cart</h1>
+<p class="page-subtitle">REVIEW YOUR ITEMS</p>
+
+{% if items %}
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for data in items %}
+        {% with item=data.item %}
+        <tr>
+
+            <td>
+                <img src="{{ item.product.image.url }}"
+                     style="width:70px; height:70px; object-fit:cover; border-radius:10px;">
+            </td>
+
+            <td>{{ item.product.name }}</td>
+
+            <td>
+                <span style="background:black; color:white; padding:4px 10px;">
+                    {{ item.variant.size }}
+                </span>
+            </td>
+
+            <td>${{ item.product.price }}</td>
+
+            <td>
+                <form method="POST" action="/update/{{ item.id }}/" style="display:flex; gap:6px;">
+                    {% csrf_token %}
+                    <button name="quantity" value="{{ item.quantity|add:'-1' }}">−</button>
+                    <span>{{ item.quantity }}</span>
+                    <button name="quantity" value="{{ item.quantity|add:'1' }}">+</button>
+                </form>
+            </td>
+
+            <td style="font-weight:600;">
+                ${{ data.subtotal }}
+            </td>
+
+            <td>
+                <a href="/remove/{{ item.id }}/" class="btn-danger">Remove</a>
+            </td>
+
+        </tr>
+        {% endwith %}
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% comment %} CLEAN TOTAL SECTION {% endcomment %}
+<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:30px;">
+
+    <a href="/" class="btn-outline" style="display:inline-block; padding:12px 24px; align-self:flex-start;">← Continue Shopping</a>
+
+    <div style="text-align:right; min-width:250px; border-top:2px solid black; padding-top:20px;">
+        <p style="font-size:0.8rem; letter-spacing:2px; color:gray;">TOTAL</p>
+        <h2 style="font-size:2rem;">${{ total }}</h2>
+
+        <a href="/checkout/" class="btn-accent"
+           style="display:block; text-align:center; margin-top:10px; padding:12px;">
+            Checkout →
+        </a>
+    </div>
+
+</div>
+
+{% else %}
+<div style="text-align:center; padding:80px;">
+    <p>Your cart is empty.</p>
+    <a href="/" class="btn-primary">Start Shopping</a>
+</div>
+{% endif %}
+
+{% endblock %}

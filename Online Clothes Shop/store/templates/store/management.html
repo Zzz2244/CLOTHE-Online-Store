@@ -1,0 +1,133 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">Product Management</h1>
+<p class="page-subtitle">Manage your store products and orders</p>
+
+<div style="margin-bottom: 30px;">
+    <a href="/add-product/" class="btn-accent">+ Add Product</a>
+    <a href="/manage-accounts/" class="btn-outline">👥 Manage Accounts</a>
+    <a href="/contact-messages/" class="btn-outline" style="position:relative;">
+        ✉️ Contact Messages
+        {% if unread_count > 0 %}
+        <span style="
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #c0392b;
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        ">{{ unread_count }}</span>
+        {% endif %}
+    </a>
+</div>
+
+
+
+{% comment %} STATS {% endcomment %}
+<div style="display:flex; gap:20px; margin-bottom:30px; flex-wrap:wrap;">
+    <div class="form-card" style="padding:20px; flex:1; min-width:200px;">
+        <p class="form-subtitle">Total Products</p>
+        <h2>{{ total_products }}</h2>
+    </div>
+
+    <div class="form-card" style="padding:20px; flex:1; min-width:200px;">
+        <p class="form-subtitle">Total Orders</p>
+        <h2>{{ total_orders }}</h2>
+    </div>
+
+    <div class="form-card" style="padding:20px; flex:1; min-width:200px;">
+        <p class="form-subtitle">Revenue</p>
+        <h2>${{ total_revenue }}</h2>
+    </div>
+</div>
+
+
+
+{% comment %} PRODUCTS {% endcomment %}
+<h3 style="margin-bottom:10px;">Products</h3>
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in products %}
+        <tr>
+            <td>{{ p.name }}</td>
+            <td>{{ p.category }}</td>
+            <td>${{ p.price }}</td>
+            <td>{{ p.total_stock }}</td>
+            <td>
+                <a href="/management/edit/{{ p.id }}/" class="btn-outline" style="padding:6px 14px; font-size:0.78rem;">Edit</a>
+                <a href="/management/delete/{{ p.id }}/" class="btn-danger">Delete</a>
+            
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% comment %} ORDERS  {% endcomment %}
+<h3 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-top:40px; margin-bottom:16px;">Orders</h3>
+
+{% if orders %}
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Order #</th>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in orders %}
+        <tr>
+            <td style="font-weight:600;">#{{ o.id }}</td>
+            <td>{{ o.customer_name }}</td>
+            <td style="color:var(--gray);">{{ o.email }}</td>
+            <td style="font-weight:600;">${{ o.total_price }}</td>
+            <td>
+                {% if o.status == 'received' %}
+                <span style="background:#e8f4fd; color:#2980b9; padding:3px 10px; font-size:0.75rem; letter-spacing:1px; font-weight:600;">📬 RECEIVED</span>
+                {% elif o.status == 'confirmed' %}
+                <span style="background:#eafaf1; color:#27ae60; padding:3px 10px; font-size:0.75rem; letter-spacing:1px; font-weight:600;">✅ CONFIRMED</span>
+                {% elif o.status == 'delivering' %}
+                <span style="background:#fef9e7; color:#f39c12; padding:3px 10px; font-size:0.75rem; letter-spacing:1px; font-weight:600;">🚚 DELIVERING</span>
+                {% elif o.status == 'completed' %}
+                <span style="background:#eafaf1; color:#27ae60; padding:3px 10px; font-size:0.75rem; letter-spacing:1px; font-weight:600;">🎉 COMPLETED</span>
+                {% elif o.status == 'cancelled' %}
+                <span style="background:#fdf0f0; color:#c0392b; padding:3px 10px; font-size:0.75rem; letter-spacing:1px; font-weight:600;">❌ CANCELLED</span>
+                {% endif %}
+            </td>
+            <td style="color:var(--gray);">{{ o.created_at|date:"d M Y" }}</td>
+            <td>
+                <a href="/management/orders/{{ o.id }}/" class="btn-outline" style="padding:6px 14px; font-size:0.78rem;">View</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p style="color:var(--gray);">No orders yet.</p>
+{% endif %}
+{% endblock %}

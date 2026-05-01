@@ -1,0 +1,14 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="form-card">
+    <h2>Welcome Back</h2>
+    <p class="form-subtitle">Login to your account</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-primary" style="width:100%; padding:13px; margin-top:8px;">Login →</button>
+    </form>
+    <p class="form-link">Don't have an account? <a href="/register/">Register here</a></p>
+</div>
+{% endblock %}

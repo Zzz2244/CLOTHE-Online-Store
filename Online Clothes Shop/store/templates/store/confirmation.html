@@ -1,0 +1,39 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div style="max-width:600px; margin:0 auto; text-align:center; padding: 40px 0;">
+    <div style="font-size:3.5rem; margin-bottom:20px;">✅</div>
+    <h1 style="font-family:'Playfair Display',serif; font-size:2.2rem; margin-bottom:12px;">Order Recieved!</h1>
+    <p style="color:var(--gray); margin-bottom:40px;">Thank you, <strong>{{ order.customer_name }}</strong>. Your order is pending confirmation.</p>
+
+    <div style="border:1px solid var(--light-gray); padding:32px; text-align:left; margin-bottom:32px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--light-gray);">
+            <div>
+                <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray);">Order Number</p>
+                <p style="font-family:'Playfair Display',serif; font-size:1.3rem;">#{{ order.id }}</p>
+            </div>
+            <div style="text-align:right;">
+                <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray);">Email</p>
+                <p style="font-size:0.9rem;">{{ order.email }}</p>
+            </div>
+        </div>
+
+        <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:6px;">Shipping To</p>
+        <p style="font-size:0.9rem; margin-bottom:24px;">{{ order.address }}</p>
+
+        {% for item in order_items %}
+        <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--light-gray); font-size:0.9rem;">
+            <span>{{ item.product.name }} × {{ item.quantity }}</span>
+            <span style="font-weight:500;">${{ item.price }}</span>
+        </div>
+        {% endfor %}
+
+        <div style="display:flex; justify-content:space-between; margin-top:16px;">
+            <span style="font-weight:600; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem;">Total</span>
+            <span style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700;">${{ order.total_price }}</span>
+        </div>
+    </div>
+
+    <a href="/" class="btn-primary" style="padding:14px 40px;">Continue Shopping</a>
+</div>
+{% endblock %}

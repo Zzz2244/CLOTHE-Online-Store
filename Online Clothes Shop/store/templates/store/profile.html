@@ -1,0 +1,56 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div style="display:grid; grid-template-columns: 280px 1fr; gap:40px; align-items:start;">
+
+     {% comment %} LEFT: User Info {% endcomment %}
+    <div style="border:1px solid var(--light-gray); padding:32px; text-align:center;">
+        <div style="width:80px; height:80px; background:var(--black); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:2rem; color:white;">
+            {{ user.username|first|upper }}
+        </div>
+        <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:6px;">{{ user.username }}</h2>
+        <p style="color:var(--gray); font-size:0.85rem; margin-bottom:24px;">{{ user.email }}</p>
+        <div style="background:var(--cream); padding:16px; text-align:left; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="color:var(--gray);">Member since</span>
+                <span style="font-weight:500;">{{ user.date_joined|date:"M Y" }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--gray);">Total orders</span>
+                <span style="font-weight:500;">{{ orders.count }}</span>
+            </div>
+        </div>
+        <a href="/change-password/" class="btn-outline" style="width:100%; text-align:center; margin-top:12px; display:block;">Change Password</a>
+        {% comment %} <a href="/logout/" class="btn-danger" style="width:100%; text-align:center; margin-top:8px; display:block;">Logout</a> {% endcomment %}
+    </div>
+
+    {% comment %} RIGHT: Order History {% endcomment %}
+    <div>
+        <h1 class="page-title">My Profile</h1>
+        <p class="page-subtitle">ACCOUNT OVERVIEW</p>
+
+        {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <div>
+                    <p style="font-family:'Playfair Display',serif; font-size:1.1rem;">Order #{{ order.id }}</p>
+                    <p style="font-size:0.82rem; color:var(--gray); letter-spacing:1px;">{{ order.created_at|date:"d M Y" }}</p>
+                </div>
+                <div style="text-align:right;">
+                    <p style="font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; color:var(--gray);">Total</p>
+                    <p style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700;">${{ order.total_price }}</p>
+                </div>
+            </div>
+            <p style="font-size:0.85rem; color:var(--gray);">📦 {{ order.address }}</p>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div style="text-align:center; padding:60px; color:var(--gray); border:1px solid var(--light-gray);">
+            <p style="font-size:1.1rem; margin-bottom:20px;">No orders yet.</p>
+            <a href="/" class="btn-primary">Start Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

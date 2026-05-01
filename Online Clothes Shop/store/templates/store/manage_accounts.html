@@ -1,0 +1,54 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <div>
+        <h1 class="page-title">Account Management</h1>
+        <p class="page-subtitle">MANAGE USERS & MESSAGES</p>
+    </div>
+    <div style="display:flex; gap:12px;">
+        <a href="/management/" class="btn-outline">← Back to Products</a>
+        <a href="/manage-accounts/create/" class="btn-accent">+ Create Account</a>
+    </div>
+</div>
+
+{% comment %} USERS TABLE {% endcomment %}
+<h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; margin-bottom:16px;">All Accounts</h3>
+<table class="styled-table" style="margin-bottom:50px;">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Joined</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+        <tr>
+            <td style="font-weight:500;">{{ u.username }}</td>
+            <td style="color:var(--gray);">{{ u.email|default:"—" }}</td>
+            <td>
+                {% if u.is_superuser %}
+                <span style="background:#c8a96e; color:#0a0a0a; padding:3px 10px; font-size:0.75rem; letter-spacing:1px; font-weight:600;">ADMIN</span>
+                {% else %}
+                <span style="background:var(--light-gray); color:var(--gray); padding:3px 10px; font-size:0.75rem; letter-spacing:1px;">USER</span>
+                {% endif %}
+            </td>
+            <td style="color:var(--gray);">{{ u.date_joined|date:"d M Y" }}</td>
+            <td style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="/manage-accounts/toggle-admin/{{ u.pk }}/" class="btn-outline" style="padding:5px 12px; font-size:0.78rem;">
+                    {% if u.is_staff %}Remove Admin{% else %}Make Admin{% endif %}
+                </a>
+                <a href="/manage-accounts/change-password/{{ u.pk }}/" class="btn-outline" style="padding:5px 12px; font-size:0.78rem;">Reset Password</a>
+                {% if u != request.user %}
+                <a href="/manage-accounts/delete/{{ u.pk }}/" class="btn-danger" style="padding:5px 12px; font-size:0.78rem;" onclick="return confirm('Delete {{ u.username }}?')">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

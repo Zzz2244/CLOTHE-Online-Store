@@ -1,0 +1,230 @@
+{% extends "admin/base.html" %}
+
+{% block title %}CLOTHE Admin Panel{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="/">CLOTHE</a>
+</h1>
+{% endblock %}
+
+{% block userlinks %}
+<form method="post" action="{% url 'admin:logout' %}" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" style="background:none; border:none; color:#c8a96e; font-size:0.78rem; letter-spacing:1px; cursor:pointer; font-family:'DM Sans',sans-serif; padding:0;">LOG OUT</button>
+</form>
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body, input, select, textarea, button { font-family: 'DM Sans', sans-serif !important; }
+
+    #header {
+        background: #0a0a0a !important;
+        padding: 0 40px !important;
+        height: 70px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border-bottom: 2px solid #c8a96e !important;
+    }
+
+    #site-name a {
+        color: white !important;
+        text-decoration: none !important;
+        font-family: 'Playfair Display', serif !important;
+        font-size: 1.6rem !important;
+        letter-spacing: 3px !important;
+        font-weight: 400 !important;
+    }
+
+    #user-tools { font-size: 0.78rem !important; letter-spacing: 1px !important; color: #aaa !important; }
+    #user-tools a { color: #c8a96e !important; text-decoration: none !important; }
+    #user-tools a:hover { color: white !important; }
+
+    #nav-breadcrumbs, .breadcrumbs, div.breadcrumbs { display: none !important; }
+    #nav-sidebar, .toggle-nav-sidebar, #nav-sidebar-toggle-label { display: none !important; }
+    .app-auth { display: none !important; }
+    #content-related { display: none !important; }
+
+    #container { overflow: visible !important; }
+    #main { display: block !important; width: 100% !important; padding-left: 0 !important; }
+    #content { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 30px 40px !important; float: none !important; }
+    #content-main { width: 100% !important; float: none !important; box-sizing: border-box !important; }
+    .colMS, .col-xs-12 { margin-right: 0 !important; width: 100% !important; float: none !important; }
+    #changelist { width: 100% !important; overflow: visible !important; }
+
+    #content h1 {
+        font-family: 'Playfair Display', serif !important;
+        font-weight: 400 !important;
+        font-size: 1.6rem !important;
+        margin-bottom: 20px !important;
+        letter-spacing: 1px !important;
+    }
+
+    .module { border-radius: 0 !important; box-shadow: none !important; margin-bottom: 20px !important; width: 100% !important; box-sizing: border-box !important; }
+
+    .module caption, .module h2 {
+        background: #0a0a0a !important;
+        color: white !important;
+        font-size: 0.78rem !important;
+        font-weight: 500 !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+        padding: 10px 16px !important;
+        border-radius: 0 !important;
+    }
+
+    .inline-related h3 { background: #0a0a0a !important; color: white !important; }
+    .inline-group .tabular thead th { background: #0a0a0a !important; color: white !important; }
+    .app-store .section { color: #c8a96e !important; font-weight: 600 !important; letter-spacing: 1px !important; }
+
+    .tabular td select { min-width: 150px !important; width: 150px !important; }
+    .tabular td { overflow: visible !important; white-space: nowrap !important; }
+
+    .change-form #content { max-width: 900px !important; }
+
+    .change-form .form-row {
+        display: grid !important;
+        grid-template-columns: 180px 1fr !important;
+        align-items: start !important;
+        gap: 20px !important;
+        padding: 20px 0 !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+    }
+
+    .change-form .form-row label {
+        font-size: 0.78rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 1px !important;
+        text-transform: uppercase !important;
+        padding-top: 12px !important;
+    }
+
+    .change-form .form-row > div,
+    .change-form .form-row > p { width: 100% !important; }
+
+    .change-form input[type=text],
+    .change-form input[type=number],
+    .change-form textarea,
+    .change-form select {
+        width: 100% !important;
+        min-width: 400px !important;
+        padding: 12px 14px !important;
+        border: 1px solid #e8e8e8 !important;
+        font-size: 0.9rem !important;
+    }
+
+    .change-form input:focus,
+    .change-form textarea:focus,
+    .change-form select:focus { border-color: #0a0a0a !important; outline: none !important; }
+
+    .change-form textarea { min-height: 120px !important; resize: vertical !important; }
+
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        border-radius: 0 !important;
+        font-family: 'DM Sans', sans-serif !important;
+        letter-spacing: 1px !important;
+        text-transform: uppercase !important;
+    }
+
+    .button.default, input[type=submit].default {
+        background: #c8a96e !important;
+        color: #0a0a0a !important;
+        font-weight: 600 !important;
+        border-radius: 0 !important;
+    }
+
+    .button.default:hover { background: #b8944f !important; }
+
+    .submit-row {
+        display: flex !important;
+        gap: 12px !important;
+        padding: 20px 0 !important;
+        background: transparent !important;
+        border-top: 1px solid #e8e8e8 !important;
+        margin-top: 20px !important;
+    }
+
+    .submit-row input[type=submit] { padding: 12px 28px !important; font-size: 0.85rem !important; }
+
+    #result_list { border: none !important; width: 100% !important; table-layout: auto !important; }
+
+    #result_list thead th {
+        background: #0a0a0a !important;
+        color: #aaa !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+        padding: 12px 16px !important;
+        border: none !important;
+        font-weight: 400 !important;
+        white-space: nowrap !important;
+    }
+
+    #result_list thead th a { color: #aaa !important; text-decoration: none !important; }
+    #result_list thead th.sorted a { color: #c8a96e !important; }
+    #result_list tbody tr { border-bottom: 1px solid #f0f0f0 !important; transition: background 0.15s !important; }
+    #result_list tbody tr:hover { background: #fffdf8 !important; }
+    #result_list td, #result_list th { padding: 14px 16px !important; font-size: 0.88rem !important; border: none !important; vertical-align: middle !important; }
+    #result_list tbody td a { text-decoration: none !important; font-weight: 500 !important; }
+    #result_list tbody td a:hover { color: #c8a96e !important; }
+
+    #toolbar { padding: 14px 16px !important; }
+    #searchbar { border-radius: 0 !important; padding: 8px 14px !important; width: 260px !important; min-width: unset !important; }
+
+    #changelist-filter h2 {
+        background: #0a0a0a !important;
+        color: white !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+        padding: 10px 16px !important;
+        font-weight: 400 !important;
+    }
+
+    #changelist-filter { width: 200px !important; min-width: 200px !important; max-width: 200px !important; }
+    #changelist-filter li.selected a { color: #c8a96e !important; font-weight: 600 !important; }
+    #changelist-filter a:hover { color: #c8a96e !important; }
+
+    .paginator { font-size: 0.82rem !important; }
+    .paginator a:hover { color: #c8a96e !important; }
+
+    .messagelist li { border-radius: 0 !important; padding: 12px 16px !important; font-size: 0.85rem !important; }
+
+    button[data-theme-switcher], [data-theme-switcher] {
+        background: transparent !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        color: white !important;
+        border-radius: 2px !important;
+    }
+
+    /* HIDE PRODUCT VARIANTS TABLE ON ADD PAGE */
+    .add-form .inline-group {
+    display: none !important;}
+        
+
+    button[data-theme-switcher]:hover { background: rgba(255,255,255,0.1) !important; }
+    button[data-theme-switcher] svg, [data-theme-switcher] svg { fill: white !important; color: white !important; }
+</style>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.submit-row input[type=submit]');
+    buttons.forEach(function(btn) {
+        if (btn.value.toLowerCase().includes('continue')) {
+            const backBtn = document.createElement('a');
+            backBtn.href = '/management/';
+            backBtn.innerText = '← BACK';
+            backBtn.style.cssText = 'padding:12px 28px; background:transparent; border:1px solid #0a0a0a; color:#0a0a0a; font-size:0.82rem; letter-spacing:1px; text-decoration:none; font-family:"DM Sans",sans-serif; cursor:pointer; display:inline-block;';
+            btn.parentNode.replaceChild(backBtn, btn);
+        }
+    });
+});
+</script>
+
+{% endblock %}

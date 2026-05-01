@@ -1,0 +1,92 @@
+{% extends 'store/base.html' %}
+  {% load static %}
+{% block content %}
+
+{% comment %} HERO BANNER {% endcomment %}
+<div style="background:var(--black); color:var(--white); padding:70px 60px; margin:-50px -60px 50px; display:flex; align-items:center; justify-content:space-between;">
+    <div>
+        <p style="font-size:0.8rem; letter-spacing:4px; text-transform:uppercase; color:var(--accent); margin-bottom:12px;">New Arrivals 2026</p>
+        <h1 style="font-family:'Playfair Display',serif; font-size:3.2rem; line-height:1.2; margin-bottom:16px;">Dress Better.<br>Live Better.</h1>
+        <p style="color:#aaa; font-size:0.95rem; margin-bottom:28px;">Premium shirts & pants curated for your style.</p>
+        <a href="#collection" class="btn-accent" style="padding:14px 32px; font-size:0.9rem;">Shop Now →</a>
+    </div>
+    <img src="{% static 'images/man.jpg' %}"
+     style="width:380px; height:380px; object-fit:cover; opacity:0.6; border-radius:4px;">
+</div>
+
+{% comment %} COLLECTION {% endcomment %}
+<div id="collection">
+    <h2 class="page-title">Our Collection</h2>
+    <p class="page-subtitle">SHIRTS & PANTS — CURATED FOR YOU</p>
+</div>
+
+{% if recommendations and user.is_authenticated %}
+<div style="margin-bottom:50px;">
+    <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:6px;">
+        Recommended For You
+    </h2>
+    <p style="color:var(--gray); font-size:0.82rem; letter-spacing:1px; margin-bottom:20px;">
+        BASED ON YOUR SHOPPING HISTORY
+    </p>
+    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;">
+        {% for product in recommendations %}
+        <div class="product-card">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:200px; object-fit:cover;">
+            {% endif %}
+            <div class="product-card-body">
+                <h5>{{ product.name }}</h5>
+                <p class="price">${{ product.price }}</p>
+                <div class="card-actions">
+                    <a href="/product/{{ product.pk }}/" class="btn-accent" style="width:100%; text-align:center;">View →</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<hr style="border:none; border-top:1px solid var(--light-gray); margin-bottom:40px;">
+{% endif %}
+{% comment %} SEARCH BAR {% endcomment %}
+<form method="GET" action="/" class="search-bar">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search products...">
+    <select name="category" style="padding:10px 16px; border:1px solid var(--light-gray); font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; cursor:pointer;">
+        <option value="">All Categories</option>
+        <option value="shirt" {% if category == 'shirt' %}selected{% endif %}>Shirts</option>
+        <option value="pants" {% if category == 'pants' %}selected{% endif %}>Pants</option>
+    </select>
+    <button type="submit" class="btn-primary">Search</button>
+    <a href="/" class="btn-outline">Clear</a>
+</form>
+
+{% comment %} PRODUCTS GRID {% endcomment %}
+<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:28px;">
+    {% for product in products %}
+    <div class="product-card">
+        <div style="position:relative;">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:100%; height:300px; object-fit:cover;">
+            {% else %}
+            <div style="height:300px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:3rem;">👕</div>
+            {% endif %}
+            
+        </div>
+        <div class="product-card-body">
+            <h5>{{ product.name }}</h5>
+            <p class="price">${{ product.price }}</p>
+            <div class="card-actions" style="display:flex; gap:8px; width:100%;">
+            <a href="/product/{{ product.pk }}/" class="btn-outline" style="flex:1; text-align:center;">Details</a>
+            {% if product.total_stock == 0 %}
+            <button disabled style="flex:1; padding:10px; background:#fff0f0; color:#c0392b; border:1px solid #c0392b; font-size:0.85rem; letter-spacing:1px; cursor:not-allowed; font-family:'DM Sans',sans-serif;">Sold Out</button>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column:1/-1; text-align:center; padding:80px; color:var(--gray);">
+        <p style="font-size:1.2rem; margin-bottom:16px;">No products found.</p>
+        <a href="/" class="btn-primary">Clear Search</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

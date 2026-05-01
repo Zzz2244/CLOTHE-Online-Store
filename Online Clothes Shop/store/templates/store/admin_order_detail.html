@@ -1,0 +1,123 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <div>
+        <h1 class="page-title">Order #{{ order.id }}</h1>
+        <p class="page-subtitle">{{ order.created_at|date:"d M Y H:i" }}</p>
+    </div>
+    <a href="/management/" class="btn-outline">← Back</a>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:30px;">
+
+    <!-- CUSTOMER INFO -->
+    <div style="border:1px solid var(--light-gray); padding:24px;">
+        <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Customer Details</p>
+        <p style="font-weight:600; font-size:1.1rem; margin-bottom:6px;">{{ order.customer_name }}</p>
+        <p style="color:var(--gray); margin-bottom:4px;">📧 {{ order.email }}</p>
+        <p style="color:var(--gray);">📦 {{ order.address }}</p>
+    </div>
+
+    <!-- ORDER STATUS -->
+    <div style="border:1px solid var(--light-gray); padding:24px;">
+        <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Update Status</p>
+
+        {% if order.status == 'received' %}
+        <span style="background:#e8f4fd; color:#2980b9; padding:6px 16px; font-size:0.82rem; letter-spacing:1px; font-weight:600; display:inline-block; margin-bottom:16px;">📬 ORDER RECEIVED</span>
+        {% elif order.status == 'confirmed' %}
+        <span style="background:#eafaf1; color:#27ae60; padding:6px 16px; font-size:0.82rem; letter-spacing:1px; font-weight:600; display:inline-block; margin-bottom:16px;">✅ ORDER CONFIRMED</span>
+        {% elif order.status == 'delivering' %}
+        <span style="background:#fef9e7; color:#f39c12; padding:6px 16px; font-size:0.82rem; letter-spacing:1px; font-weight:600; display:inline-block; margin-bottom:16px;">🚚 ORDER DELIVERING</span>
+        {% elif order.status == 'completed' %}
+        <span style="background:#eafaf1; color:#27ae60; padding:6px 16px; font-size:0.82rem; letter-spacing:1px; font-weight:600; display:inline-block; margin-bottom:16px;">🎉 ORDER COMPLETED</span>
+        {% elif order.status == 'cancelled' %}
+        <span style="background:#fdf0f0; color:#c0392b; padding:6px 16px; font-size:0.82rem; letter-spacing:1px; font-weight:600; display:inline-block; margin-bottom:16px;">❌ ORDER CANCELLED</span>
+        {% endif %}
+
+        {% if order.status != 'cancelled' and order.status != 'completed' %}
+        <form method="POST" action="/management/orders/{{ order.id }}/status/">
+            {% csrf_token %}
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button type="submit" name="status" value="received"
+                    class="{% if order.status == 'received' %}btn-primary{% else %}btn-outline{% endif %}"
+                    style="padding:10px; text-align:center;">
+                    📬 Order Received
+                </button>
+                <button type="submit" name="status" value="confirmed"
+                    class="{% if order.status == 'confirmed' %}btn-primary{% else %}btn-outline{% endif %}"
+                    style="padding:10px; text-align:center;">
+                    ✅ Order Confirmed
+                </button>
+                <button type="submit" name="status" value="delivering"
+                    class="{% if order.status == 'delivering' %}btn-outline{% else %}btn-outline{% endif %}"
+                    style="padding:10px; text-align:center;">
+                    🚚 Order Delivering
+                </button>
+            </div>
+        </form>
+
+        <!-- COMPLETE BUTTON -->
+        <form method="POST" action="/management/orders/{{ order.id }}/complete/" style="margin-top:10px;">
+            {% csrf_token %}
+            <button type="submit" class="btn-accent" style="width:100%; padding:12px; text-align:center;"
+                onclick="return confirm('Mark Order #{{ order.id }} as Completed?')">
+                🎉 Mark as Completed
+            </button>
+        </form>
+
+        {% elif order.status == 'completed' %}
+        <p style="color:#27ae60; font-size:0.85rem;">✅ This order is completed.</p>
+        {% else %}
+        <p style="color:var(--gray); font-size:0.85rem;">This order has been cancelled and cannot be updated.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ORDER ITEMS -->
+<div style="border:1px solid var(--light-gray); padding:24px; margin-bottom:30px;">
+    <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Items Ordered</p>
+    {% for item in items %}
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--light-gray);">
+        <div style="display:flex; align-items:center; gap:16px;">
+            {% if item.product.image %}
+            <img src="{{ item.product.image.url }}" style="width:60px; height:60px; object-fit:cover;">
+            {% endif %}
+            <div>
+                <p style="font-weight:500;">{{ item.product.name }}</p>
+                <p style="font-size:0.82rem; color:var(--gray);">Size: {{ item.variant.size }} × {{ item.quantity }}</p>
+            </div>
+        </div>
+        <p style="font-weight:600;">${{ item.price }}</p>
+    </div>
+    {% endfor %}
+    <div style="display:flex; justify-content:space-between; margin-top:16px;">
+        <span style="font-weight:600; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem;">Total</span>
+        <span style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">${{ order.total_price }}</span>
+    </div>
+</div>
+
+<!-- DANGER ZONE -->
+{% if order.status != 'cancelled' and order.status != 'completed' %}
+<div style="border:1px solid #f5c6cb; padding:20px; background:#fff8f8;">
+    <p style="font-weight:600; margin-bottom:8px; color:#c0392b;">Danger Zone</p>
+    <p style="font-size:0.85rem; color:var(--gray); margin-bottom:12px;">Cancelling this order will restore product stock.</p>
+    <a href="/management/orders/{{ order.id }}/cancel/"
+       class="btn-danger"
+       onclick="return confirm('Cancel Order #{{ order.id }}? ')">
+        Cancel Order
+    </a>
+</div>
+{% elif order.status == 'cancelled' %}
+<div style="border:1px solid #f5c6cb; padding:20px; background:#fff8f8;">
+    <p style="font-weight:600; margin-bottom:8px; color:#c0392b;">Danger Zone</p>
+    <p style="font-size:0.85rem; color:var(--gray); margin-bottom:12px;">Permanently delete this cancelled order from the system.</p>
+    <a href="/management/orders/{{ order.id }}/delete-permanent/"
+       class="btn-danger"
+       onclick="return confirm('Permanently delete Order #{{ order.id }}? This cannot be undone.')">
+        Delete Permanently
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

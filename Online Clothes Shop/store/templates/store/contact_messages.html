@@ -1,0 +1,39 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+    <div>
+        <h1 class="page-title">Contact Messages</h1>
+        <p class="page-subtitle">MESSAGES FROM CUSTOMERS</p>
+    </div>
+    <a href="/management/" class="btn-outline">← Back to Management</a>
+</div>
+
+{% if contacts %}
+{% for c in contacts %}
+<div class="order-card" style="{% if not c.is_read %}border-left:3px solid var(--accent);{% endif %} margin-bottom:16px;">
+    <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px;">
+        <div>
+            <p style="font-weight:600; font-size:0.95rem;">{{ c.subject }}</p>
+            <p style="font-size:0.82rem; color:var(--gray);">
+                From: <strong>{{ c.name }}</strong> ({{ c.email }}) · {{ c.created_at|date:"d M Y H:i" }}
+            </p>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+            {% if not c.is_read %}
+            <span style="background:var(--accent); color:var(--black); padding:3px 10px; font-size:0.72rem; font-weight:600; letter-spacing:1px;">NEW</span>
+            <a href="/manage-accounts/mark-read/{{ c.pk }}/" style="background:var(--black); color:white; padding:4px 12px; font-size:0.75rem; text-decoration:none;">Mark Read</a>
+            {% else %}
+            <span style="color:var(--gray); font-size:0.78rem; letter-spacing:1px;">✓ READ</span>
+            {% endif %}
+        </div>
+    </div>
+    <p style="font-size:0.88rem; line-height:1.7; color:#444; background:var(--cream); padding:14px;">{{ c.message }}</p>
+</div>
+{% endfor %}
+{% else %}
+<div style="text-align:center; padding:60px; color:var(--gray); border:1px solid var(--light-gray);">
+    <p style="font-size:1.1rem;">No messages yet.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div style="max-width:700px; margin:0 auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+        <div>
+            <h1 class="page-title">Order #{{ order.id }}</h1>
+            <p class="page-subtitle">{{ order.created_at|date:"d M Y" }}</p>
+        </div>
+        <a href="/orders/" class="btn-outline">← Back to Orders</a>
+    </div>
+
+    {% comment %} STATUS TRACKER {% endcomment %}
+
+{% if order.status == 'completed' %}
+
+<div style="background:#eafaf1; padding:40px 24px; margin-bottom:30px; text-align:center; border:1px solid #b7e4c7;">
+    <div style="font-size:2.5rem; margin-bottom:10px;">🎉</div>
+    <p style="font-size:0.85rem; letter-spacing:2px; text-transform:uppercase; color:#27ae60; font-weight:700;">
+        Order Completed
+    </p>
+    <p style="color:var(--gray); font-size:0.9rem; margin-top:10px;">
+        This order has been successfully completed.
+    </p>
+</div>
+
+{% elif order.status == 'cancelled' %}
+
+<div style="background:#fdf0f0; padding:40px 24px; margin-bottom:30px; text-align:center; border:1px solid #f5c6cb;">
+    <div style="font-size:2.5rem; margin-bottom:10px;">❌</div>
+    <p style="font-size:0.85rem; letter-spacing:2px; text-transform:uppercase; color:#c0392b; font-weight:700;">
+        Order Cancelled
+    </p>
+    <p style="color:var(--gray); font-size:0.9rem; margin-top:10px;">
+        This order was cancelled.
+    </p>
+</div>
+
+{% else %}
+
+<div style="background:var(--cream); padding:24px; margin-bottom:30px;">
+    <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">
+        Order Status
+    </p>
+
+    <div style="display:flex; align-items:center; gap:0;">
+
+        
+        <div style="text-align:center; flex:1;">
+            <div style="width:40px; height:40px; border-radius:50%; margin:0 auto 8px;
+                display:flex; align-items:center; justify-content:center;
+                background:{% if order.status != 'cancelled' %}var(--black){% else %}var(--light-gray){% endif %};
+                color:white;">📬</div>
+
+            <p style="font-size:0.75rem; font-weight:600;">
+                Received
+            </p>
+        </div>
+
+        <div style="flex:1; height:2px; background:var(--light-gray);"></div>
+
+        <div style="text-align:center; flex:1;">
+            <div style="width:40px; height:40px; border-radius:50%; margin:0 auto 8px;
+                display:flex; align-items:center; justify-content:center;
+                background:{% if order.status == 'confirmed' or order.status == 'delivering' %}var(--black){% else %}var(--light-gray){% endif %};
+                color:white;">✅</div>
+
+            <p style="font-size:0.75rem; font-weight:600;">
+                Confirmed
+            </p>
+        </div>
+
+        <div style="flex:1; height:2px; background:var(--light-gray);"></div>
+        <div style="text-align:center; flex:1;">
+            <div style="width:40px; height:40px; border-radius:50%; margin:0 auto 8px;
+                display:flex; align-items:center; justify-content:center;
+                background:{% if order.status == 'delivering' %}var(--accent){% else %}var(--light-gray){% endif %};
+                color:white;">🚚</div>
+
+            <p style="font-size:0.75rem; font-weight:600;">
+                Delivering
+            </p>
+        </div>
+
+    </div>
+</div>
+
+{% endif %}
+
+    {% comment %} ORDER INFO {% endcomment %}
+    <div style="border:1px solid var(--light-gray); padding:24px; margin-bottom:24px;">
+        <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Shipping Details</p>
+        <p style="font-weight:500; margin-bottom:4px;">{{ order.customer_name }}</p>
+        <p style="color:var(--gray); font-size:0.9rem; margin-bottom:4px;">{{ order.email }}</p>
+        <p style="color:var(--gray); font-size:0.9rem;">{{ order.address }}</p>
+    </div>
+
+    {% comment %} ORDER ITEMS {% endcomment %}
+    <div style="border:1px solid var(--light-gray); padding:24px; margin-bottom:24px;">
+        <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Items Ordered</p>
+        {% for item in items %}
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--light-gray);">
+            <div style="display:flex; align-items:center; gap:16px;">
+                {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" style="width:60px; height:60px; object-fit:cover;">
+                {% endif %}
+                <div>
+                    <p style="font-weight:500;">{{ item.product.name }}</p>
+                    <p style="font-size:0.82rem; color:var(--gray);">Size: {{ item.variant.size }} × {{ item.quantity }}</p>
+                </div>
+            </div>
+            <p style="font-weight:600;">${{ item.price }}</p>
+        </div>
+        {% endfor %}
+        <div style="display:flex; justify-content:space-between; margin-top:16px;">
+            <span style="font-weight:600; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem;">Total</span>
+            <span style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">${{ order.total_price }}</span>
+        </div>
+    </div>
+
+    <a href="/" class="btn-primary" style="width:100%; text-align:center; padding:14px; display:block;">Continue Shopping</a>
+</div>
+{% endblock %}

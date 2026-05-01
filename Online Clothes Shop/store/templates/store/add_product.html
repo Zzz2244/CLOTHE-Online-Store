@@ -1,0 +1,219 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">{% if editing %}Edit Product{% else %}Add Product{% endif %}</h1>
+<p class="page-subtitle">{% if editing %}Update product details{% else %}Create a new item for your store{% endif %}</p>
+
+<div class="form-card" style="max-width: 700px;">
+
+    <h2>{% if editing %}Edit Product{% else %}New Product{% endif %}</h2>
+    <p class="form-subtitle">Fill in details and stock for each size</p>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Name</label>
+            {{ form.name }}
+        </div>
+
+        <div class="form-group">
+            <label>Category</label>
+            {{ form.category }}
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-group">
+            <label>Price</label>
+            {{ form.price }}
+        </div>
+
+        <div class="form-group">
+            <label>Image</label>
+            {{ form.image }}
+        </div>
+
+         {% comment %} Sizes & Stock  {% endcomment %}
+        <h3 style="margin-top:30px; margin-bottom:10px; font-family:'Playfair Display', serif;">
+            Sizes & Stock
+        </h3>
+
+        {{ formset.management_form }}
+
+        <table class="styled-table" id="variant-table">
+            <thead>
+                <tr>
+                    <th>Size</th>
+                    <th>Stock</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="variant-body">
+                {% for f in formset %}
+                <tr class="variant-row">
+                    {{ f.id }}
+                    <td>{{ f.size }}</td>
+                    <td>{{ f.stock }}</td>
+                    <td>
+                        <button type="button" onclick="removeRow(this)"
+                            style="background:none; border:1px solid #c0392b; color:#c0392b;
+                                   padding:4px 10px; cursor:pointer; font-size:0.85rem;">
+                            ✕
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                {% comment %} Default first empty row if no existing variants {% endcomment %}
+                {% if not formset.forms %}
+                <tr class="variant-row">
+                    <td>
+                        <select name="variants-0-size" style="width:100%;">
+                            <option value="">----------</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="2XL">2XL</option>
+                            <option value="3XL">3XL</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" name="variants-0-stock" value="0" min="0" style="width:100%;">
+                    </td>
+                    <td>
+                        <button type="button" onclick="removeRow(this)"
+                            style="background:none; border:1px solid #c0392b; color:#c0392b;
+                                   padding:4px 10px; cursor:pointer; font-size:0.85rem;">
+                            ✕
+                        </button>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        {% comment %} Plus button {% endcomment %}
+        <div style="margin-top: 12px;">
+            <button type="button" onclick="addRow()"
+                style="background:none; border:1px solid var(--accent, #b8972e);
+                       color:var(--accent, #b8972e); padding:8px 20px;
+                       cursor:pointer; font-size:0.9rem; letter-spacing:1px;">
+                + Add Size
+            </button>
+        </div>
+
+        <a href = "/management/">
+        <button type="submit" class="btn-accent" style="width:100%; margin-top:24px;">
+            Save Product
+        </button>
+        </a>
+    </form>
+</div>
+
+<script>
+const SIZES = ['M', 'L', 'XL', '2XL', '3XL'];
+
+function getRowCount() {
+    return document.querySelectorAll('.variant-row').length;
+}
+
+function updateTotalForms(count) {
+    document.getElementById('id_variants-TOTAL_FORMS').value = count;
+}
+
+function getUsedSizes() {
+    const used = [];
+    document.querySelectorAll('.variant-row select').forEach(sel => {
+        if (sel.value) used.push(sel.value);
+    });
+    return used;
+}
+
+function refreshAllDropdowns() {
+    const usedSizes = getUsedSizes();
+    document.querySelectorAll('.variant-row select').forEach(sel => {
+        const currentValue = sel.value;
+        Array.from(sel.options).forEach(opt => {
+            if (opt.value === '') return; 
+            opt.disabled = usedSizes.includes(opt.value) && opt.value !== currentValue;
+        });
+    });
+}
+
+function addRow() {
+    const usedSizes = getUsedSizes();
+    const remaining = SIZES.filter(s => !usedSizes.includes(s));
+
+    if (remaining.length === 0) {
+        alert('All sizes have been added!');
+        return;
+    }
+
+    const index = getRowCount();
+    const tbody = document.getElementById('variant-body');
+
+    const sizeOptions = SIZES.map(s =>
+        `<option value="${s}" ${usedSizes.includes(s) ? 'disabled' : ''}>${s}</option>`
+    ).join('');
+
+    const row = document.createElement('tr');
+    row.className = 'variant-row';
+    row.innerHTML = `
+        <td>
+            <select name="variants-${index}-size" style="width:100%;" onchange="refreshAllDropdowns()">
+                <option value="">----------</option>
+                ${sizeOptions}
+            </select>
+        </td>
+        <td>
+            <input type="number" name="variants-${index}-stock"
+                   value="0" min="0" style="width:100%;">
+        </td>
+        <td>
+            <button type="button" onclick="removeRow(this)"
+                style="background:none; border:1px solid #c0392b; color:#c0392b;
+                       padding:4px 10px; cursor:pointer; font-size:0.85rem;">
+                ✕
+            </button>
+        </td>
+    `;
+    tbody.appendChild(row);
+    updateTotalForms(getRowCount());
+    refreshAllDropdowns();
+}
+
+function removeRow(btn) {
+    const rows = document.querySelectorAll('.variant-row');
+    if (rows.length <= 1) {
+        alert('You must have at least one size.');
+        return;
+    }
+    btn.closest('tr').remove();
+
+    document.querySelectorAll('.variant-row').forEach((row, i) => {
+        row.querySelector('select').name = `variants-${i}-size`;
+        row.querySelector('input[type="number"]').name = `variants-${i}-stock`;
+    });
+
+    updateTotalForms(getRowCount());
+    refreshAllDropdowns(); // re-enable the removed size in remaining rows
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateTotalForms(getRowCount());
+
+    // attach onchange to existing rows (for edit page)
+    document.querySelectorAll('.variant-row select').forEach(sel => {
+        sel.addEventListener('change', refreshAllDropdowns);
+    });
+
+    refreshAllDropdowns();
+});
+</script>
+
+{% endblock %}
