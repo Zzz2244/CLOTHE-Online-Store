@@ -46,11 +46,6 @@ def product_detail(request, pk):
         'recommendations': recommendations,
     })
 
-
-# ========================
-# CART
-# ========================
-
 @login_required(login_url='/login/')
 def add_to_cart(request, pk):
     variant_id = request.POST.get('variant_id')
@@ -127,10 +122,6 @@ def update_cart(request, key):
     return redirect('cart')
 
 
-# ========================
-# CHECKOUT
-# ========================
-
 @login_required(login_url='/login/')
 def checkout(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -168,11 +159,6 @@ def order_confirmation(request, pk):
     order = get_object_or_404(Order, pk=pk)
     items = OrderItem.objects.filter(order=order)
     return render(request, 'store/confirmation.html', {'order': order, 'order_items': items})
-
-
-# ========================
-# AUTH
-# ========================
 
 def register_view(request):
     form = RegisterForm(request.POST or None)
@@ -231,17 +217,12 @@ def change_password(request):
     return render(request, 'store/change_password.html', {'form': form})
 
 
-# ========================
-# MANAGEMENT
-# ========================
-
 @staff_member_required(login_url='/login/')
 def management(request):
     products = Product.objects.all()
     orders = Order.objects.all().order_by('-created_at')
     total_products = products.count()
     total_orders = orders.count()
-    # Revenue only from completed orders
     total_revenue = sum(
     o.total_price for o in orders if o.status == 'completed')
     low_stock = [p for p in products if p.total_stock() <= 3]
@@ -317,7 +298,6 @@ def cancel_order(request, pk):
 @staff_member_required(login_url='/login/')
 def delete_order_permanently(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    # Only allow deleting cancelled orders
     if order.status == 'cancelled':
         order.delete()
         messages.success(request, f'Order #{pk} permanently deleted!')
@@ -377,9 +357,7 @@ def edit_product(request, pk):
         'editing': True
     })
 
-# ========================
-# CONTACT
-# ========================
+
 
 @login_required(login_url='/login/')
 def contact(request):
@@ -408,11 +386,6 @@ def mark_contact_read(request, pk):
     contact.is_read = True
     contact.save()
     return redirect('contact_messages')
-
-
-# ========================
-# ACCOUNT MANAGEMENT
-# ========================
 
 @staff_member_required(login_url='/login/')
 def manage_accounts(request):
@@ -475,11 +448,6 @@ def admin_change_password(request, pk):
         messages.success(request, f'Password for {user.username} changed!')
         return redirect('manage_accounts')
     return render(request, 'store/admin_change_password.html', {'target_user': user})
-
-
-# ========================
-# RECOMMENDATIONS
-# ========================
 
 def get_recommendations(user, current_product=None, limit=4):
     from collections import defaultdict
