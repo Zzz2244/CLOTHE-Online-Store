@@ -10,8 +10,6 @@
 </div>
 
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:30px;">
-
-    <!-- CUSTOMER INFO -->
     <div style="border:1px solid var(--light-gray); padding:24px;">
         <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Customer Details</p>
         <p style="font-weight:600; font-size:1.1rem; margin-bottom:6px;">{{ order.customer_name }}</p>
@@ -19,7 +17,6 @@
         <p style="color:var(--gray);">📦 {{ order.address }}</p>
     </div>
 
-    <!-- ORDER STATUS -->
     <div style="border:1px solid var(--light-gray); padding:24px;">
         <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Update Status</p>
 
@@ -56,8 +53,6 @@
                 </button>
             </div>
         </form>
-
-        <!-- COMPLETE BUTTON -->
         <form method="POST" action="/management/orders/{{ order.id }}/complete/" style="margin-top:10px;">
             {% csrf_token %}
             <button type="submit" class="btn-accent" style="width:100%; padding:12px; text-align:center;"
@@ -74,7 +69,7 @@
     </div>
 </div>
 
-<!-- ORDER ITEMS -->
+
 <div style="border:1px solid var(--light-gray); padding:24px; margin-bottom:30px;">
     <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Items Ordered</p>
     {% for item in items %}
@@ -96,8 +91,6 @@
         <span style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;">${{ order.total_price }}</span>
     </div>
 </div>
-
-<!-- DANGER ZONE -->
 {% if order.status != 'cancelled' and order.status != 'completed' %}
 <div style="border:1px solid #f5c6cb; padding:20px; background:#fff8f8;">
     <p style="font-weight:600; margin-bottom:8px; color:#c0392b;">Danger Zone</p>
