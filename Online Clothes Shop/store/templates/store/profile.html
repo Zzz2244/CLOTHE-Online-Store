@@ -3,7 +3,6 @@
 {% block content %}
 <div style="display:grid; grid-template-columns: 280px 1fr; gap:40px; align-items:start;">
 
-     {% comment %} LEFT: User Info {% endcomment %}
     <div style="border:1px solid var(--light-gray); padding:32px; text-align:center;">
         <div style="width:80px; height:80px; background:var(--black); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:2rem; color:white;">
             {{ user.username|first|upper }}
@@ -21,10 +20,9 @@
             </div>
         </div>
         <a href="/change-password/" class="btn-outline" style="width:100%; text-align:center; margin-top:12px; display:block;">Change Password</a>
-        {% comment %} <a href="/logout/" class="btn-danger" style="width:100%; text-align:center; margin-top:8px; display:block;">Logout</a> {% endcomment %}
     </div>
 
-    {% comment %} RIGHT: Order History {% endcomment %}
+    
     <div>
         <h1 class="page-title">My Profile</h1>
         <p class="page-subtitle">ACCOUNT OVERVIEW</p>
