@@ -10,8 +10,6 @@
         <a href="/orders/" class="btn-outline">← Back to Orders</a>
     </div>
 
-    {% comment %} STATUS TRACKER {% endcomment %}
-
 {% if order.status == 'completed' %}
 
 <div style="background:#eafaf1; padding:40px 24px; margin-bottom:30px; text-align:center; border:1px solid #b7e4c7;">
@@ -86,8 +84,6 @@
 </div>
 
 {% endif %}
-
-    {% comment %} ORDER INFO {% endcomment %}
     <div style="border:1px solid var(--light-gray); padding:24px; margin-bottom:24px;">
         <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Shipping Details</p>
         <p style="font-weight:500; margin-bottom:4px;">{{ order.customer_name }}</p>
@@ -95,7 +91,6 @@
         <p style="color:var(--gray); font-size:0.9rem;">{{ order.address }}</p>
     </div>
 
-    {% comment %} ORDER ITEMS {% endcomment %}
     <div style="border:1px solid var(--light-gray); padding:24px; margin-bottom:24px;">
         <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Items Ordered</p>
         {% for item in items %}
