@@ -37,8 +37,6 @@
             <label>Image</label>
             {{ form.image }}
         </div>
-
-         {% comment %} Sizes & Stock  {% endcomment %}
         <h3 style="margin-top:30px; margin-bottom:10px; font-family:'Playfair Display', serif;">
             Sizes & Stock
         </h3>
@@ -68,8 +66,6 @@
                     </td>
                 </tr>
                 {% endfor %}
-
-                {% comment %} Default first empty row if no existing variants {% endcomment %}
                 {% if not formset.forms %}
                 <tr class="variant-row">
                     <td>
@@ -97,7 +93,7 @@
             </tbody>
         </table>
 
-        {% comment %} Plus button {% endcomment %}
+    
         <div style="margin-top: 12px;">
             <button type="button" onclick="addRow()"
                 style="background:none; border:1px solid var(--accent, #b8972e);
@@ -201,13 +197,13 @@ function removeRow(btn) {
     });
 
     updateTotalForms(getRowCount());
-    refreshAllDropdowns(); // re-enable the removed size in remaining rows
+    refreshAllDropdowns(); 
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     updateTotalForms(getRowCount());
 
-    // attach onchange to existing rows (for edit page)
+    
     document.querySelectorAll('.variant-row select').forEach(sel => {
         sel.addEventListener('change', refreshAllDropdowns);
     });
