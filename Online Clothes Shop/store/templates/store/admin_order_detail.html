@@ -10,6 +10,8 @@
 </div>
 
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:30px;">
+
+
     <div style="border:1px solid var(--light-gray); padding:24px;">
         <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Customer Details</p>
         <p style="font-weight:600; font-size:1.1rem; margin-bottom:6px;">{{ order.customer_name }}</p>
@@ -69,7 +71,6 @@
     </div>
 </div>
 
-
 <div style="border:1px solid var(--light-gray); padding:24px; margin-bottom:30px;">
     <p style="font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; color:var(--gray); margin-bottom:16px;">Items Ordered</p>
     {% for item in items %}
@@ -112,5 +113,4 @@
     </a>
 </div>
 {% endif %}
-
 {% endblock %}
