@@ -6,7 +6,7 @@
 
 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:40px; align-items:start;">
 
-    <!-- LEFT: Shipping Form -->
+
     <div style="border:1px solid var(--light-gray); padding:40px; background:white;">
         <h2 style="font-family:'Playfair Display',serif; font-size:1.6rem; margin-bottom:6px;">Shipping Details</h2>
         <p style="color:var(--gray); font-size:0.85rem; margin-bottom:28px;">Enter your delivery information</p>
@@ -25,12 +25,11 @@
                 <textarea name="address" required rows="5" placeholder="Street, City, State, Country..." style="resize:none; line-height:1.6; width:100%; padding:11px 14px; border:1px solid var(--light-gray); font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none;"></textarea>
             </div>
 
-            <!-- PAYMENT METHOD -->
+           
             <p style="font-size:0.82rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; color:var(--gray);">Payment Method</p>
 
             <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
 
-                <!-- COD Option -->
                 <label style="cursor:pointer;">
                     <input type="radio" name="payment_method" value="cod" checked style="display:none;" id="cod-radio">
                     <div id="cod-card" onclick="selectPayment('cod')" style="border:2px solid var(--black); padding:16px 20px; display:flex; align-items:center; gap:14px; transition:all 0.2s;">
@@ -49,7 +48,7 @@
         </form>
     </div>
 
-    <!-- RIGHT: Order Summary -->
+
     <div style="border:1px solid var(--light-gray); padding:40px; background:var(--cream);">
         <h2 style="font-family:'Playfair Display',serif; font-size:1.6rem; margin-bottom:24px;">Order Summary</h2>
         {% for item in items %}
