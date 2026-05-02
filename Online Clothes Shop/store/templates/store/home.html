@@ -2,7 +2,7 @@
   {% load static %}
 {% block content %}
 
-{% comment %} HERO BANNER {% endcomment %}
+
 <div style="background:var(--black); color:var(--white); padding:70px 60px; margin:-50px -60px 50px; display:flex; align-items:center; justify-content:space-between;">
     <div>
         <p style="font-size:0.8rem; letter-spacing:4px; text-transform:uppercase; color:var(--accent); margin-bottom:12px;">New Arrivals 2026</p>
@@ -14,7 +14,6 @@
      style="width:380px; height:380px; object-fit:cover; opacity:0.6; border-radius:4px;">
 </div>
 
-{% comment %} COLLECTION {% endcomment %}
 <div id="collection">
     <h2 class="page-title">Our Collection</h2>
     <p class="page-subtitle">SHIRTS & PANTS — CURATED FOR YOU</p>
@@ -47,7 +46,7 @@
 </div>
 <hr style="border:none; border-top:1px solid var(--light-gray); margin-bottom:40px;">
 {% endif %}
-{% comment %} SEARCH BAR {% endcomment %}
+
 <form method="GET" action="/" class="search-bar">
     <input type="text" name="q" value="{{ query }}" placeholder="Search products...">
     <select name="category" style="padding:10px 16px; border:1px solid var(--light-gray); font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; cursor:pointer;">
@@ -59,7 +58,6 @@
     <a href="/" class="btn-outline">Clear</a>
 </form>
 
-{% comment %} PRODUCTS GRID {% endcomment %}
 <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:28px;">
     {% for product in products %}
     <div class="product-card">
