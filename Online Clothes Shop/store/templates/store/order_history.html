@@ -14,7 +14,6 @@
             <p style="font-size:0.82rem; color:var(--gray); letter-spacing:1px;">{{ order.created_at|date:"d M Y" }}</p>
         </div>
         <div style="text-align:right;">
-            {% comment %} STATUS BADGE {% endcomment %}
             {% if order.status == 'received' %}
             <span style="background:#e8f4fd; color:#2980b9; padding:4px 12px; font-size:0.75rem; letter-spacing:1px; font-weight:600; display:block; margin-bottom:6px;">📬 ORDER RECEIVED</span>
             {% elif order.status == 'confirmed' %}
