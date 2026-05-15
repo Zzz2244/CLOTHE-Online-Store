@@ -1,13 +1,10 @@
 {
-  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput",
-  "installCommand": "pip install -r requirements.txt",
   "builds": [
     {
-      "src": "onlineshop/wsgi.py",
+      "src": "vercel_app.py",
       "use": "@vercel/python",
-      "config": { 
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.12"
+      "config": {
+        "maxLambdaSize": "15mb"
       }
     }
   ],
@@ -17,88 +14,8 @@
       "dest": "/static/$1"
     },
     {
-      "src": "/media/(.*)",
-      "dest": "/media/$1"
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/management/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/cart/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/checkout/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/orders/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/product/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/contact/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/profile/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/register/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/login/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/logout/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/add/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/remove/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/update/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/confirmation/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/change-password/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/contact-messages/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/manage-accounts/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
-      "src": "/add-product/(.*)",
-      "dest": "onlineshop/wsgi.py"
-    },
-    {
       "src": "/(.*)",
-      "dest": "onlineshop/wsgi.py"
+      "dest": "vercel_app.py"
     }
   ]
 }
