@@ -127,3 +127,18 @@ STATICFILES_DIRS = [
 import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+SECURE_SSL_REDIRECT = False  # Set to True if using HTTPS
+SESSION_COOKIE_SECURE = False  # Set to True if using HTTPS
+CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
+
+# Generate a proper SECRET_KEY (replace this with a long random string)
+# You can generate one at: https://djecrety.ir/
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-key-here')
+
+# Static files for Vercel
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [BASE_DIR / "static"]
