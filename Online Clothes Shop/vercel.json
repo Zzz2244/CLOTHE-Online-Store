@@ -5,17 +5,20 @@
     {
       "src": "onlineshop/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb" }
-    },
-    {
-      "src": "store/**/*.html",
-      "use": "@vercel/static"
+      "config": { 
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.12"
+      }
     }
   ],
   "routes": [
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
+    },
+    {
+      "src": "/media/(.*)",
+      "dest": "/media/$1"
     },
     {
       "src": "/admin/(.*)",
@@ -59,6 +62,38 @@
     },
     {
       "src": "/logout/(.*)",
+      "dest": "onlineshop/wsgi.py"
+    },
+    {
+      "src": "/add/(.*)",
+      "dest": "onlineshop/wsgi.py"
+    },
+    {
+      "src": "/remove/(.*)",
+      "dest": "onlineshop/wsgi.py"
+    },
+    {
+      "src": "/update/(.*)",
+      "dest": "onlineshop/wsgi.py"
+    },
+    {
+      "src": "/confirmation/(.*)",
+      "dest": "onlineshop/wsgi.py"
+    },
+    {
+      "src": "/change-password/(.*)",
+      "dest": "onlineshop/wsgi.py"
+    },
+    {
+      "src": "/contact-messages/(.*)",
+      "dest": "onlineshop/wsgi.py"
+    },
+    {
+      "src": "/manage-accounts/(.*)",
+      "dest": "onlineshop/wsgi.py"
+    },
+    {
+      "src": "/add-product/(.*)",
       "dest": "onlineshop/wsgi.py"
     },
     {
