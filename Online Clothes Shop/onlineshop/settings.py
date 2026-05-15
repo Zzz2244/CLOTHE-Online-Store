@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'onlineshop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shop_db',
+        'NAME': 'neondb',
         'USER': 'postgres',
         'PASSWORD': 'admin123',
         'HOST': 'localhost',
