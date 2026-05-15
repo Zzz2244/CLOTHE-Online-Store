@@ -1,4 +1,8 @@
 {
+  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput",
+  "installCommand": "pip install -r requirements.txt"
+}
+{
   "builds": [
     {
       "src": "onlineshop/wsgi.py",
@@ -25,7 +29,4 @@
     }
   ]
 }
-{
-  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput",
-  "installCommand": "pip install -r requirements.txt"
-}
+
