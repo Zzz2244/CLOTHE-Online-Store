@@ -142,3 +142,15 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-key-here')
 # Static files for Vercel
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [BASE_DIR / "static"]
+# Vercel deployment settings
+ 
+
+# Allow Vercel domain
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
+
+# Static files for Vercel
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Ensure Django knows it's running on Vercel
+if 'VERCEL' in os.environ:
+    DEBUG = False
